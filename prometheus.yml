@@ -12,8 +12,11 @@ scrape_configs:
 
   - job_name: spring_boot_app
     metrics_path: /actuator/prometheus  # Указываем путь к метрикам Spring Boot
+    scheme: https  # Использование HTTPS
+    tls_config:
+      insecure_skip_verify: true  # Отключить проверку сертификата (для тестирования)
     static_configs:
-      - targets: ['host.docker.internal:8118']
+      - targets: ['host.docker.internal:8002']
       
   - job_name: postgres
     static_configs:

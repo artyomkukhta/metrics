@@ -15,4 +15,4 @@ scrape_configs:
           - localhost
         labels:
           job: "spring-boot-app"
-          __path__: /var/log/spring-boot-app.log  # Используем путь внутри контейнера
+          __path__: /var/log/app.log  # Используем путь внутри контейнера
