@@ -1,0 +1,23 @@
+global:
+  scrape_interval: 15s  # Интервал сбора метрик
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ['prometheus:9090']
+
+  - job_name: loki
+    static_configs:
+      - targets: ['loki:3100']
+
+  - job_name: spring_boot_app
+    metrics_path: /actuator/prometheus  # Указываем путь к метрикам Spring Boot
+    static_configs:
+      - targets: ['host.docker.internal:8118']
+      
+  - job_name: postgres
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+
+
+

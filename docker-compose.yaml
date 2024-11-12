@@ -1,0 +1,62 @@
+
+version: '3.8'
+
+networks:
+  default:
+
+services:
+  loki:
+    image: grafana/loki:2.9.2
+    ports:
+      - "3100:3100"
+    networks:
+      - default
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml  # Подключение конфигурационного файла
+      - ./loki-data:/tmp/loki  # Хранилище данных для Loki
+    command: -config.file=/etc/loki/local-config.yaml
+
+  promtail:
+    image: grafana/promtail:2.9.2
+    ports:
+      - "9080:9080"
+    networks:
+      - default
+    volumes:
+      - ./promtail-config.yaml:/etc/promtail/config.yml  # Подключение конфигурационного файла
+      - E:/IdeaProjects/metrics/logs:/var/log  # Подключение директории с логами приложения
+    command: -config.file=/etc/promtail/config.yml
+
+  grafana:
+    image: grafana/grafana:latests
+    build: './grafana-config'
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin  # Пароль администратора (измените при необходимости)
+    networks:
+      - default
+    volumes:
+      - ./grafana-data:/var/lib/grafana  # Хранилище данных для Grafana
+
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - default
+      
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter
+    container_name: postgres-exporter
+    ports:
+      - "9187:9187"  # Экспорт метрик доступен на порту 9187
+    environment:
+      - DATA_SOURCE_NAME=postgresql://postgres:root@host.docker.internal:5432/metrics-db?sslmode=disable
+    restart: always
+    networks:
+      - default
