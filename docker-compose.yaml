@@ -24,7 +24,7 @@ services:
       - default
     volumes:
       - ./promtail-config.yaml:/etc/promtail/config.yml  # Подключение конфигурационного файла
-      - E:/IdeaProjects/watcher/logs:/var/log  # Подключение директории с логами приложения
+      - E:/ideaprojects/appmarket/logs:/var/log  # Подключение директории с логами приложения
     command: -config.file=/etc/promtail/config.yml
 
   grafana:
@@ -56,7 +56,7 @@ services:
     ports:
       - "9187:9187"  # Экспорт метрик доступен на порту 9187
     environment:
-      - DATA_SOURCE_NAME=postgresql://postgres:root@host.docker.internal:5432/watcher_db1?sslmode=disable
+      - DATA_SOURCE_NAME=postgresql://postgres:root@host.docker.internal:5432/appmarket_db?sslmode=disable
     restart: always
     networks:
       - default
